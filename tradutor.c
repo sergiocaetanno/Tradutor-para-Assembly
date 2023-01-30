@@ -89,6 +89,7 @@ int verificaSintaxe(char *ptrMatrizTraducao, char sintaxe[columns], int countCop
     return 0;
 }
 
+//VERIFICA SE A LINHA ATUAL É UMA DECLARAÇÃO DE FUNÇÃO E SE A SINTAXE DAS PRÓXIMAS LINHAS ESTÁ COMPLETA (ATÉ O 'end')
 int verificaDeclaracaoFunc(char *line, int count)
 {
 
@@ -98,7 +99,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256) ,"function f%d pi%d pi%d pi%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -142,7 +143,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pi%d pi%d pa%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -184,7 +185,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pi%d pa%d pi%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -226,7 +227,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pa%d pi%d pi%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -268,7 +269,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pi%d pa%d pa%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -310,7 +311,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pa%d pi%d pa%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -352,7 +353,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pa%d pa%d pi%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -394,7 +395,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256),"function f%d pa%d pa%d pa%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -436,7 +437,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d pi%d pi%d", &fn, &p1, &p2);
     if(r == 3)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -478,7 +479,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d pi%d pa%d", &fn, &p1, &p2);
     if(r == 3)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -520,7 +521,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d pa%d pi%d", &fn, &p1, &p2);
     if(r == 3)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -562,7 +563,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d pa%d pa%d", &fn, &p1, &p2);
     if(r == 3)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -604,7 +605,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d pi%d", &fn, &p1);
     if(r == 2)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -646,7 +647,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d pa%d", &fn, &p1);
     if(r == 2)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -688,7 +689,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     r = sscanf((line + count * 256), "function f%d", &fn);
     if(r == 1)
     {
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         countBackup = count;
         count = verificaSintaxe(line, "def", count);
         if(count!= 0)
@@ -726,9 +727,27 @@ int verificaDeclaracaoFunc(char *line, int count)
             return 0;
         }
     }
+
+    return 0;
 }
 
+int verificaDefVar(char *line, int count){
 
+    int r = 0;
+    int idVar, constValue;
+    int countBackup;
+    r = sscanf((line + count * 256), "var vi%d", &idVar);
+    if(r == 1){
+        printf("Linha %d: %s\n", count + 1, line);
+        printf("");
+    }
+    r = sscanf((line + count * 256), "vet va%d size ci%d", &idVar, &constValue);
+    if(r == 2){
+
+    }
+
+    return 0;
+}
 
 
 int main()
@@ -736,8 +755,6 @@ int main()
     setlocale(LC_ALL,"Portuguese");
     char line[sizeMatrix][columns];
     int count = 0; //A LINHA ATUAL É (count + 1)
-    int retorno;
-
     inicializaMatrizTraducao(line, sizeMatrix, columns);
 
     /*PRINTA ARQUIVO .blp
@@ -754,8 +771,7 @@ int main()
     {
 
         /*________________________________________VERIFICA SE É DECLARAÇÃO DE FUNÇÃO________________________________________*/
-        retorno = verificaDeclaracaoFunc(line ,count);
-        if(retorno == 1)
+        if(verificaDeclaracaoFunc(line ,count) == 1)
         {
             count++;
             continue;
@@ -765,13 +781,11 @@ int main()
 
 
         /*________________________________________VERIFICA SE É DEFINIÇÃO DE VARIÁVEL________________________________________
-        retorno = verificaDefVar();
-        if(retorno == 1)
+        if(verificaDefVar() == 1)
         {
             count++;
             continue;
         }
-
         ___________________________________________________________________________________________________________________________________________*/
 
         count++;
