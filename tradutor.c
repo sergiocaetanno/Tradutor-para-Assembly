@@ -738,11 +738,12 @@ int verificaDefVar(char *line, int count){
     int countBackup;
     r = sscanf((line + count * 256), "var vi%d", &idVar);
     if(r == 1){
-        printf("Linha %d: %s\n", count + 1, line);
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
         printf("");
     }
     r = sscanf((line + count * 256), "vet va%d size ci%d", &idVar, &constValue);
     if(r == 2){
+        printf("Linha %d: %s\n", count + 1, line + count * 256);
 
     }
 
