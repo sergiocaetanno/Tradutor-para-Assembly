@@ -6,6 +6,8 @@
 #define columns 256
 #define sizeMatrix 100
 
+int posicaoAtualPilha = 0;
+
 // REMOVE O '\n' DO FIM DA LINHA
 void remove_newline(char *ptr)
 {
@@ -731,20 +733,27 @@ int verificaDeclaracaoFunc(char *line, int count)
     return 0;
 }
 
-int verificaDefVar(char *line, int count){
+int verificaDefVar(char *line, int count, int posicaoAtualPilha){
 
     int r = 0;
     int idVar, constValue;
     int countBackup;
     r = sscanf((line + count * 256), "var vi%d", &idVar);
     if(r == 1){
-        printf("Linha %d: %s\n", count + 1, line + count * 256);
-        printf("");
+
+        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("subq $4, %%rsp");
+        printf("        #var vi%d em -%d(%rbp)\n", idVar, posicaoAtualPilha);
+    	posicaoAtualPilha += 4;
+        return 1;
     }
     r = sscanf((line + count * 256), "vet va%d size ci%d", &idVar, &constValue);
     if(r == 2){
-        printf("Linha %d: %s\n", count + 1, line + count * 256);
-
+        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("subq $%d, %%rsp", constValue * 4);
+        printf("        #var va%d em -%d(%rbp)\n", idVar, posicaoAtualPilha);
+    	posicaoAtualPilha = posicaoAtualPilha + 4 * constValue;
+		return 1;
     }
 
     return 0;
@@ -781,13 +790,13 @@ int main()
         /*___________________________________________________________________________________________________________________________________________*/
 
 
-        /*________________________________________VERIFICA SE É DEFINIÇÃO DE VARIÁVEL________________________________________
-        if(verificaDefVar() == 1)
+        /*________________________________________VERIFICA SE É DEFINIÇÃO DE VARIÁVEL________________________________________*/
+        if(verificaDefVar(line, count, posicaoAtualPilha) == 1)
         {
             count++;
             continue;
         }
-        ___________________________________________________________________________________________________________________________________________*/
+        /*___________________________________________________________________________________________________________________________________________*/
 
         count++;
     }
