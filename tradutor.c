@@ -769,7 +769,7 @@ int verificaDefVar(char *line, int count){
         }
 
         if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
-            printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16);
+            printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             printf("        #var vi%d em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
             posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
 
@@ -796,7 +796,7 @@ int verificaDefVar(char *line, int count){
         }
 
         if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
-            printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16);
+            printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             printf("        #vet va%d[0] em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
             posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
         }
@@ -987,6 +987,56 @@ int verificaRetorno(char *line, int count){
 
     return 0;
 }
+
+/*int verificaChamadaFunc(char *line, int count){
+
+    int r, fn;
+    char param1[10] = {'\0'}, param2[10] = {'\0'}, param3[10] = {'\0'};
+    int contadoraValorAlocarPilha = 1; //A QUANTIDADE DE MEMÓRIA ALOCADA PARA A PILHA DEVE SER MÚLTIPLA DE 16
+    float tmp;
+
+    r = sscanf(line + 256 * count, "call f%d %s %s %s", &fn, param1, param2, param3);
+    if(r == 1){
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
+        printf("call f%d        #chama a função f%d\n\n", fn, fn);
+        return 1;
+    }
+        if(r == 2){
+        posicaoAtualPilha += 8;
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
+
+        tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
+
+        while(tmp < 1){
+            contadoraValorAlocarPilha++;
+            tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
+        }
+
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+            printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16);
+            printf("\n");
+            posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
+        }
+        printf("movq %%rdi, -%d(%%rbp)", posicaoAtualPilha + 8);
+        printf("call f%d        #chama a função f%d\n", fn, fn);
+        return 1;
+    }
+
+        if(r == 3){
+        posicaoAtualPilha += 16;
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
+        printf("call f%d        #chama a função f%d\n\n", fn, fn);
+        return 1;
+    }
+
+        if(r == 4){
+        posicaoAtualPilha += 32;
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
+        printf("call f%d        #chama a função f%d\n\n", fn, fn);
+        return 1;
+    }
+    return 0;
+}*/
 
 
 
