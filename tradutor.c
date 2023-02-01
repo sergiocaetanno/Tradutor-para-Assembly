@@ -71,6 +71,13 @@ int verificaSintaxe(char *ptrMatrizTraducao, char sintaxe[columns], int countCop
         }
         else
         {
+
+            if(strncmp(sintaxe,"endif",5)==0){
+                if(strncmp(ptrMatrizTraducao,"if",2)==0){
+                    break;
+                }
+            }
+
             if(strncmp(ptrMatrizTraducao,"function",8)==0){
                 break;
             }
@@ -809,6 +816,8 @@ int verificaDefVar(char *line, int count){
     return 0;
 }
 
+
+
 int verificaRetorno(char *line, int count){
 
     int r, retorno;
@@ -846,6 +855,7 @@ int verificaRetorno(char *line, int count){
 
     return 0;
 }
+
 
 
 int main()
