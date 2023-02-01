@@ -816,7 +816,139 @@ int verificaDefVar(char *line, int count){
     return 0;
 }
 
+int verificaCondicional(char* line, int count)
+{
+    int r, condition;
+    int countBackup;
 
+    //var
+    r = sscanf((line + count * 256) ,"if vi%d", &condition);
+
+
+
+    if(r == 1)
+    {
+        printf("Linha %d: %s\n", count + 1, line + (count*256));
+        countBackup = count;
+        count = verificaSintaxe(line, "endif", count);
+        if(count!= 0)
+        {
+            count = countBackup;
+
+            /*TESTE TEMPORÁRIO
+
+                posicaoPilhaVariaveisLocais[0]=4;
+                posicaoPilhaVariaveisLocais[1]=8;
+                posicaoPilhaVariaveisLocais[2]=12;
+                posicaoPilhaVariaveisLocais[3]=16;
+                posicaoPilhaVariaveisLocais[4]=40;
+
+            TESTE TEMPORÁRIO */
+
+            if (condition <= 5){
+                //printf("Linha %d: %s\n", count, line);
+                printf("\n#CONDICIONAL %d\n\n", ifCount);
+                //posicaoPilhaVariaveisLocais
+                printf("cmpl $0, -%d(%%rbp)\n",posicaoPilhaVariaveisLocais[condition-1]);
+                printf("je endif%d\n\n", ifCount);
+                printf("#bloco da condicional %d\n\nendif%d:\n\n",ifCount, ifCount);
+                ifCount++;
+                //lance da contadora de ifs pra organizar os labels dos ifs em assembly
+            }
+            else{
+                printf("-={ Erro: parâmetro inválido }=-");
+            }
+
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    //param
+    r = sscanf((line + count * 256) ,"if pi%d", &condition);
+
+    //printf("-={ Teste condicional: R = %d }=- \n", r);//teste
+
+    if(r == 1)
+    {
+        printf("Linha %d: %s\n", count + 1, line + (count*256));
+        countBackup = count;
+        count = verificaSintaxe(line, "endif", count);
+        if(count!= 0)
+        {
+            count = countBackup;
+
+            if (condition == 1){
+                //printf("Linha %d: %s\n", count, line);
+                printf("\n#CONDICIONAL %d\n\n", ifCount);
+                printf("cmpl $0, %%edi\n");
+                printf("je endif%d\n\n", ifCount);
+                printf("#bloco da condicional %d\n\nendif%d:\n\n",ifCount, ifCount);
+                ifCount++;
+                //lance da contadora de ifs pra organizar os labels dos ifs em assembly
+            }
+            else if (condition == 2){
+                //printf("Linha %d: %s\n", count, line);
+                printf("\n#CONDICIONAL %d\n\n", ifCount);
+                printf("cmpl $0, %%esi\n");
+                printf("je endif%d\n\n", ifCount);
+                printf("#bloco da condicional %d\n\nendif%d:\n\n",ifCount, ifCount);
+                ifCount++;
+                //lance da contadora de ifs pra organizar os labels dos ifs em assembly
+            }
+            else if (condition == 3){
+                //printf("Linha %d: %s\n", count, line);
+                printf("\n#CONDICIONAL %d\n\n", ifCount);
+                printf("cmpl $0, %%edx\n");
+                printf("je endif%d\n\n", ifCount);
+                printf("#bloco da condicional %d\n\nendif%d:\n\n",ifCount, ifCount);
+                ifCount++;
+                //lance da contadora de ifs pra organizar os labels dos ifs em assembly
+            }
+            else{
+                printf("-={ Erro: parâmetro inválido }=-");
+            }
+
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    //const
+    r = sscanf((line + count * 256) ,"if ci%d", &condition);
+    if(r == 1)
+    {
+        printf("Linha %d: %s\n", count + 1, line + (count*256));
+        countBackup = count;
+        count = verificaSintaxe(line, "endif", count);
+        if(count!= 0)
+        {
+            count = countBackup;
+            printf("\n#CONDICIONAL %d\n\n", ifCount);
+            printf("cmpl $0, $%d\n", condition);
+            printf("je endif%d\n\n", ifCount);
+            printf("#bloco da condicional %d\n\nendif%d:\n\n",ifCount, ifCount);
+            ifCount++;
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+
+    }
+
+
+    return 0;
+
+}
 
 int verificaRetorno(char *line, int count){
 
@@ -903,7 +1035,7 @@ int main()
         }
         /*___________________________________________________________________________________________________________________________________________*/
 
-                /*________________________________________VERIFICA SE É CONDICIONAL________________________________________
+                /*________________________________________VERIFICA SE É CONDICIONAL________________________________________*/
         if(verificaCondicional(line, count) == 1)
         {
             count++;
