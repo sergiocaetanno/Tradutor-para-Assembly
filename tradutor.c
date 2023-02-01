@@ -8,7 +8,7 @@
 
 int posicaoAtualPilha = 0;
 int valorAlocadoPilha = 0;
-int posicaoPilhaVariaveisLocais[5] = {0,0,0,0,0};
+int posicaoPilhaVariaveisLocaisRegistradores[8] = {0,0,0,0,0,0,0,0}; //%rdi, %rsi e %rdx serão salvos, respectivamente, nas posições 5, 6 e 7 desse vetor;
 int ifCount = 1;
 
 // REMOVE O '\n' DO FIM DA LINHA
@@ -759,7 +759,7 @@ int verificaDefVar(char *line, int count){
     r = sscanf((line + count * 256), "var vi%d", &idVar);
     if(r == 1){
     	posicaoAtualPilha += 4;
-        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
@@ -771,12 +771,12 @@ int verificaDefVar(char *line, int count){
         if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
             printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             printf("        #var vi%d em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
-            posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
+            posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
 
         }
         else{
             printf("#var vi%d em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
-            posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
+            posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
         }
 
         valorAlocadoPilha = contadoraValorAlocarPilha * 16;
@@ -786,7 +786,7 @@ int verificaDefVar(char *line, int count){
     r = sscanf((line + count * 256), "vet va%d size ci%d", &idVar, &constValue);
     if(r == 2){
     	posicaoAtualPilha = posicaoAtualPilha + 4 * constValue;
-        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
@@ -798,11 +798,11 @@ int verificaDefVar(char *line, int count){
         if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
             printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             printf("        #vet va%d[0] em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
-            posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
+            posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
         }
         else{
             printf("#vet va%d[0] em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
-            posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
+            posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
         }
 
 
@@ -828,7 +828,7 @@ int verificaCondicional(char* line, int count)
 
     if(r == 1)
     {
-        printf("Linha %d: %s\n", count + 1, line + (count*256));
+        printf("Linha %d: %s\n\n", count + 1, line + (count*256));
         countBackup = count;
         count = verificaSintaxe(line, "endif", count);
         if(count!= 0)
@@ -849,7 +849,7 @@ int verificaCondicional(char* line, int count)
                 //printf("Linha %d: %s\n", count, line);
                 printf("\n#CONDICIONAL %d\n\n", ifCount);
                 //posicaoPilhaVariaveisLocais
-                printf("cmpl $0, -%d(%%rbp)\n",posicaoPilhaVariaveisLocais[condition-1]);
+                printf("cmpl $0, -%d(%%rbp)\n",posicaoPilhaVariaveisLocaisRegistradores[condition-1]);
                 printf("je endif%d\n\n", ifCount);
                 printf("#bloco da condicional %d\n\nendif%d:\n\n",ifCount, ifCount);
                 ifCount++;
@@ -874,7 +874,7 @@ int verificaCondicional(char* line, int count)
 
     if(r == 1)
     {
-        printf("Linha %d: %s\n", count + 1, line + (count*256));
+        printf("Linha %d: %s\n\n", count + 1, line + (count*256));
         countBackup = count;
         count = verificaSintaxe(line, "endif", count);
         if(count!= 0)
@@ -924,7 +924,7 @@ int verificaCondicional(char* line, int count)
     r = sscanf((line + count * 256) ,"if ci%d", &condition);
     if(r == 1)
     {
-        printf("Linha %d: %s\n", count + 1, line + (count*256));
+        printf("Linha %d: %s\n\n", count + 1, line + (count*256));
         countBackup = count;
         count = verificaSintaxe(line, "endif", count);
         if(count!= 0)
@@ -956,14 +956,14 @@ int verificaRetorno(char *line, int count){
 
     r = sscanf(line + count * 256, "return vi%d", &retorno);
     if(r==1){
-        printf("Linha %d: %s\n", count + 1, line + 256 * count);
-        printf("movl -%d(%%rbp), %%eax\n\n", posicaoPilhaVariaveisLocais[retorno-1]);
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
+        printf("movl -%d(%%rbp), %%eax\n\n", posicaoPilhaVariaveisLocaisRegistradores[retorno-1]);
         return 1;
     }
 
     r = sscanf(line + count * 256, "return pi%d", &retorno);
     if(r==1){
-        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
         if(retorno == 1){
             printf("movl %%edi, %%eax\n\n");
             return 1;
@@ -980,7 +980,7 @@ int verificaRetorno(char *line, int count){
 
     r = sscanf(line + count * 256, "return ci%d", &retorno);
     if(r==1){
-        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
         printf("movl $%d, %%eax\n\n", retorno);
         return 1;
     }
@@ -988,7 +988,7 @@ int verificaRetorno(char *line, int count){
     return 0;
 }
 
-/*int verificaChamadaFunc(char *line, int count){
+int verificaChamadaFunc(char *line, int count){
 
     int r, fn;
     char param1[10] = {'\0'}, param2[10] = {'\0'}, param3[10] = {'\0'};
@@ -1001,7 +1001,8 @@ int verificaRetorno(char *line, int count){
         printf("call f%d        #chama a função f%d\n\n", fn, fn);
         return 1;
     }
-        if(r == 2){
+
+    else if(r == 2){
         posicaoAtualPilha += 8;
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
@@ -1013,30 +1014,105 @@ int verificaRetorno(char *line, int count){
         }
 
         if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
-            printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16);
-            printf("\n");
-            posicaoPilhaVariaveisLocais[idVar-1] = posicaoAtualPilha;
+            printf("subq $%d, %%rsp\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
+            posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha;
+            printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("call f%d        #chama a função f%d\n\n", fn, fn);
+            printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("addq $%d, %%rsp        #desaloca valor alocado para registradores após recuperá-los\n\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
         }
-        printf("movq %%rdi, -%d(%%rbp)", posicaoAtualPilha + 8);
-        printf("call f%d        #chama a função f%d\n", fn, fn);
+        else{
+            posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha;
+            printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("call f%d        #chama a função f%d\n\n", fn, fn);
+            printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+        }
+        posicaoAtualPilha -= 8;
         return 1;
     }
 
-        if(r == 3){
+    else if(r == 3){
+
         posicaoAtualPilha += 16;
+
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
-        printf("call f%d        #chama a função f%d\n\n", fn, fn);
+
+        tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
+
+        while(tmp < 1){
+            contadoraValorAlocarPilha++;
+            tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
+        }
+
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+            printf("subq $%d, %%rsp\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
+            posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 8;
+            posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha;
+            printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq %%rsi, -%d(%%rbp)        #salva %%rsi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("call f%d        #chama a função f%d\n\n", fn, fn);
+            printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq -%d(%%rbp), %%rsi        #recupera %%rsi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("addq $%d, %%rsp        #desaloca valor alocado para registradores após recuperá-los\n\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
+        }
+        else{
+            posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 8;
+            posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha;
+            printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq %%rsi, -%d(%%rbp)        #salva %%rsi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("call f%d        #chama a função f%d\n\n", fn, fn);
+            printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq -%d(%%rbp), %%rsi        #recupera %%rsi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+        }
+        posicaoAtualPilha -= 16;
         return 1;
     }
 
-        if(r == 4){
-        posicaoAtualPilha += 32;
+    else if(r == 4){
+
+        posicaoAtualPilha += 24;
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
-        printf("call f%d        #chama a função f%d\n\n", fn, fn);
+
+        tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
+
+        while(tmp < 1){
+            contadoraValorAlocarPilha++;
+            tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
+        }
+
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+            printf("subq $%d, %%rsp\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
+            posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 16;
+            posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha - 8;
+            posicaoPilhaVariaveisLocaisRegistradores[7] = posicaoAtualPilha;
+            printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq %%rsi, -%d(%%rbp)        #salva %%rsi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("movq %%rdx, -%d(%%rbp)        #salva %%rdx em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[7], posicaoPilhaVariaveisLocaisRegistradores[7]);
+            printf("call f%d        #chama a função f%d\n\n", fn, fn);
+            printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq -%d(%%rbp), %%rsi        #recupera %%rsi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("movq -%d(%%rbp), %%rdx        #recupera %%rdx de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[7], posicaoPilhaVariaveisLocaisRegistradores[7]);
+            printf("addq $%d, %%rsp        #desaloca valor alocado para registradores após recuperá-los\n\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
+        }
+        else{
+            posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 16;
+            posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha - 8;
+            posicaoPilhaVariaveisLocaisRegistradores[7] = posicaoAtualPilha;
+            printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq %%rsi, -%d(%%rbp)        #salva %%rsi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("movq %%rdx, -%d(%%rbp)        #salva %%rdx em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[7], posicaoPilhaVariaveisLocaisRegistradores[7]);
+            printf("call f%d        #chama a função f%d\n\n", fn, fn);
+            printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+            printf("movq -%d(%%rbp), %%rsi        #recupera %%rsi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+            printf("movq -%d(%%rbp), %%rdx        #recupera %%rdx de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[7], posicaoPilhaVariaveisLocaisRegistradores[7]);
+        }
+
+        posicaoAtualPilha -= 24;
+
         return 1;
     }
     return 0;
-}*/
+}
 
 
 
@@ -1067,7 +1143,7 @@ int main()
             valorAlocadoPilha = 0;
 
             for(int i = 0; i<5; i++){
-                posicaoPilhaVariaveisLocais[i] = 0;
+                posicaoPilhaVariaveisLocaisRegistradores[i] = 0;
             }
 
             count++;
@@ -1095,6 +1171,14 @@ int main()
 
         /*________________________________________VERIFICA SE É RETORNO________________________________________*/
         if(verificaRetorno(line, count) == 1)
+        {
+            count++;
+            continue;
+        }
+        /*___________________________________________________________________________________________________________________________________________*/
+
+        /*________________________________________VERIFICA SE É CHAMADA DE FUNCAO________________________________________*/
+        if(verificaChamadaFunc(line, count) == 1)
         {
             count++;
             continue;
