@@ -99,6 +99,7 @@ int verificaDeclaracaoFunc(char *line, int count)
 
     int r, p1, p2, p3, fn;
     int countBackup;
+    char fmt[30] = "\n\n#CÓDIGO DA FUNÇÃO:\n\n";
 
     r = sscanf((line + count * 256) ,"function f%d pi%d pi%d pi%d", &fn, &p1, &p2, &p3);
     if(r == 4)
@@ -118,7 +119,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -162,7 +163,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -204,7 +205,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -246,7 +247,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -288,7 +289,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -330,7 +331,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -372,7 +373,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -414,7 +415,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -456,7 +457,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -498,7 +499,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -540,7 +541,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -582,7 +583,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -624,7 +625,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -666,7 +667,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -708,7 +709,7 @@ int verificaDeclaracaoFunc(char *line, int count)
                     if(count !=0)
                     {
                         count = countBackup;
-                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp\nleave\nret\n\n", fn, fn);
+                        printf("\n.globl f%d\nf%d:\npushq %%rbp\nmovq %%rsp, %%rbp%s\nleave\nret\n\n", fn, fn, fmt);
                         return 1;
                     }
                     else
@@ -797,6 +798,44 @@ int verificaDefVar(char *line, int count){
     return 0;
 }
 
+int verificaRetorno(char *line, int count){
+
+    int r, retorno;
+
+    r = sscanf(line + count * 256, "return vi%d", &retorno);
+    if(r==1){
+        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("movl -%d(%%rbp), %%eax\n\n", posicaoPilhaVariaveisLocais[retorno-1]);
+        return 1;
+    }
+
+    r = sscanf(line + count * 256, "return pi%d", &retorno);
+    if(r==1){
+        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        if(retorno == 1){
+            printf("movl %%edi, %%eax\n\n");
+            return 1;
+        }
+        else if(retorno == 2){
+            printf("movl %%esi, %%eax\n\n");
+            return 1;
+        }
+        else if(retorno == 3){
+            printf("movl %%edx, %%eax\n\n");
+            return 1;
+        }
+    }
+
+    r = sscanf(line + count * 256, "return ci%d", &retorno);
+    if(r==1){
+        printf("Linha %d: %s\n", count + 1, line + 256 * count);
+        printf("movl $%d, %%eax\n\n", retorno);
+        return 1;
+    }
+
+    return 0;
+}
+
 
 int main()
 {
@@ -830,6 +869,14 @@ int main()
 
         /*________________________________________VERIFICA SE É DEFINIÇÃO DE VARIÁVEL________________________________________*/
         if(verificaDefVar(line, count) == 1)
+        {
+            count++;
+            continue;
+        }
+        /*___________________________________________________________________________________________________________________________________________*/
+
+        /*________________________________________VERIFICA SE É RETORNO________________________________________*/
+        if(verificaRetorno(line, count) == 1)
         {
             count++;
             continue;
