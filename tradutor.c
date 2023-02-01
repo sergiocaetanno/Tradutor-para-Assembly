@@ -72,21 +72,26 @@ int verificaSintaxe(char *ptrMatrizTraducao, char sintaxe[columns], int countCop
         else
         {
 
-            if(strncmp(sintaxe,"endif",5)==0){
-                if(strncmp(ptrMatrizTraducao,"if",2)==0){
+            if(strncmp(sintaxe,"endif",5)==0)
+            {
+                if(strncmp(ptrMatrizTraducao,"if",2)==0)
+                {
                     break;
                 }
             }
 
-            if(strncmp(ptrMatrizTraducao,"function",8)==0){
+            if(strncmp(ptrMatrizTraducao,"function",8)==0)
+            {
                 break;
             }
 
             ptrPercorreLinha = ptrMatrizTraducao;
             while(*ptrPercorreLinha!='\0')
             {
-                if(strcmp(sintaxe,"return")==0){
-                    if(strncmp(ptrPercorreLinha,sintaxe, strlen(sintaxe)) == 0){
+                if(strcmp(sintaxe,"return")==0)
+                {
+                    if(strncmp(ptrPercorreLinha,sintaxe, strlen(sintaxe)) == 0)
+                    {
                         printf("Linha%d: %s\n", countCopy + 1,sintaxe);
                         return countCopy;
                     }
@@ -115,7 +120,7 @@ int verificaDeclaracaoFunc(char *line, int count)
     int countBackup;
     char fmt[30] = "\n\n#CÓDIGO DA FUNÇÃO:\n\n";
 
-    r = sscanf((line + count * 256) ,"function f%d pi%d pi%d pi%d", &fn, &p1, &p2, &p3);
+    r = sscanf((line + count * 256),"function f%d pi%d pi%d pi%d", &fn, &p1, &p2, &p3);
     if(r == 4)
     {
         printf("Linha %d: %s\n", count + 1, line + count * 256);
@@ -750,31 +755,36 @@ int verificaDeclaracaoFunc(char *line, int count)
     return 0;
 }
 
-int verificaDefVar(char *line, int count){
+int verificaDefVar(char *line, int count)
+{
 
     int r = 0;
     int idVar, constValue;
     int contadoraValorAlocarPilha = 1; //A QUANTIDADE DE MEMÓRIA ALOCADA PARA A PILHA DEVE SER MÚLTIPLA DE 16
     float tmp;
     r = sscanf((line + count * 256), "var vi%d", &idVar);
-    if(r == 1){
-    	posicaoAtualPilha += 4;
+    if(r == 1)
+    {
+        posicaoAtualPilha += 4;
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
-        while(tmp < 1){
+        while(tmp < 1)
+        {
             contadoraValorAlocarPilha++;
             tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
         }
 
-        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha)
+        {
             printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             printf("        #var vi%d em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
             posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
 
         }
-        else{
+        else
+        {
             printf("#var vi%d em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
             posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
         }
@@ -784,23 +794,27 @@ int verificaDefVar(char *line, int count){
         return 1;
     }
     r = sscanf((line + count * 256), "vet va%d size ci%d", &idVar, &constValue);
-    if(r == 2){
-    	posicaoAtualPilha = posicaoAtualPilha + 4 * constValue;
+    if(r == 2)
+    {
+        posicaoAtualPilha = posicaoAtualPilha + 4 * constValue;
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
-        while(tmp < 1){
+        while(tmp < 1)
+        {
             contadoraValorAlocarPilha++;
             tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
         }
 
-        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha)
+        {
             printf("subq $%d, %%rsp", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             printf("        #vet va%d[0] em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
             posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
         }
-        else{
+        else
+        {
             printf("#vet va%d[0] em -%d(%%rbp)\n\n", idVar, posicaoAtualPilha);
             posicaoPilhaVariaveisLocaisRegistradores[idVar-1] = posicaoAtualPilha;
         }
@@ -810,7 +824,7 @@ int verificaDefVar(char *line, int count){
 
 
 
-		return 1;
+        return 1;
     }
 
     return 0;
@@ -822,7 +836,7 @@ int verificaCondicional(char* line, int count)
     int countBackup;
 
     //var
-    r = sscanf((line + count * 256) ,"if vi%d", &condition);
+    r = sscanf((line + count * 256),"if vi%d", &condition);
 
 
 
@@ -845,7 +859,8 @@ int verificaCondicional(char* line, int count)
 
             TESTE TEMPORÁRIO */
 
-            if (condition <= 5){
+            if (condition <= 5)
+            {
                 //printf("Linha %d: %s\n", count, line);
                 printf("\n#CONDICIONAL %d\n\n", ifCount);
                 //posicaoPilhaVariaveisLocais
@@ -855,7 +870,8 @@ int verificaCondicional(char* line, int count)
                 ifCount++;
                 //lance da contadora de ifs pra organizar os labels dos ifs em assembly
             }
-            else{
+            else
+            {
                 printf("-={ Erro: parâmetro inválido }=-");
             }
 
@@ -868,7 +884,7 @@ int verificaCondicional(char* line, int count)
     }
 
     //param
-    r = sscanf((line + count * 256) ,"if pi%d", &condition);
+    r = sscanf((line + count * 256),"if pi%d", &condition);
 
     //printf("-={ Teste condicional: R = %d }=- \n", r);//teste
 
@@ -881,7 +897,8 @@ int verificaCondicional(char* line, int count)
         {
             count = countBackup;
 
-            if (condition == 1){
+            if (condition == 1)
+            {
                 //printf("Linha %d: %s\n", count, line);
                 printf("\n#CONDICIONAL %d\n\n", ifCount);
                 printf("cmpl $0, %%edi\n");
@@ -890,7 +907,8 @@ int verificaCondicional(char* line, int count)
                 ifCount++;
                 //lance da contadora de ifs pra organizar os labels dos ifs em assembly
             }
-            else if (condition == 2){
+            else if (condition == 2)
+            {
                 //printf("Linha %d: %s\n", count, line);
                 printf("\n#CONDICIONAL %d\n\n", ifCount);
                 printf("cmpl $0, %%esi\n");
@@ -899,7 +917,8 @@ int verificaCondicional(char* line, int count)
                 ifCount++;
                 //lance da contadora de ifs pra organizar os labels dos ifs em assembly
             }
-            else if (condition == 3){
+            else if (condition == 3)
+            {
                 //printf("Linha %d: %s\n", count, line);
                 printf("\n#CONDICIONAL %d\n\n", ifCount);
                 printf("cmpl $0, %%edx\n");
@@ -908,7 +927,8 @@ int verificaCondicional(char* line, int count)
                 ifCount++;
                 //lance da contadora de ifs pra organizar os labels dos ifs em assembly
             }
-            else{
+            else
+            {
                 printf("-={ Erro: parâmetro inválido }=-");
             }
 
@@ -921,7 +941,7 @@ int verificaCondicional(char* line, int count)
     }
 
     //const
-    r = sscanf((line + count * 256) ,"if ci%d", &condition);
+    r = sscanf((line + count * 256),"if ci%d", &condition);
     if(r == 1)
     {
         printf("Linha %d: %s\n\n", count + 1, line + (count*256));
@@ -950,36 +970,43 @@ int verificaCondicional(char* line, int count)
 
 }
 
-int verificaRetorno(char *line, int count){
+int verificaRetorno(char *line, int count)
+{
 
     int r, retorno;
 
     r = sscanf(line + count * 256, "return vi%d", &retorno);
-    if(r==1){
+    if(r==1)
+    {
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
         printf("movl -%d(%%rbp), %%eax\n\n", posicaoPilhaVariaveisLocaisRegistradores[retorno-1]);
         return 1;
     }
 
     r = sscanf(line + count * 256, "return pi%d", &retorno);
-    if(r==1){
+    if(r==1)
+    {
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
-        if(retorno == 1){
+        if(retorno == 1)
+        {
             printf("movl %%edi, %%eax\n\n");
             return 1;
         }
-        else if(retorno == 2){
+        else if(retorno == 2)
+        {
             printf("movl %%esi, %%eax\n\n");
             return 1;
         }
-        else if(retorno == 3){
+        else if(retorno == 3)
+        {
             printf("movl %%edx, %%eax\n\n");
             return 1;
         }
     }
 
     r = sscanf(line + count * 256, "return ci%d", &retorno);
-    if(r==1){
+    if(r==1)
+    {
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
         printf("movl $%d, %%eax\n\n", retorno);
         return 1;
@@ -988,42 +1015,145 @@ int verificaRetorno(char *line, int count){
     return 0;
 }
 
-int verificaChamadaFunc(char *line, int count){
+int verificaChamadaFunc(char *line, int count)
+{
 
-    int r, fn;
+    int r, fn, p1, p2, p3;
     char param1[10] = {'\0'}, param2[10] = {'\0'}, param3[10] = {'\0'};
     int contadoraValorAlocarPilha = 1; //A QUANTIDADE DE MEMÓRIA ALOCADA PARA A PILHA DEVE SER MÚLTIPLA DE 16
     float tmp;
 
     r = sscanf(line + 256 * count, "call f%d %s %s %s", &fn, param1, param2, param3);
-    if(r == 1){
+    if(r == 1)
+    {
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
         printf("call f%d        #chama a função f%d\n\n", fn, fn);
         return 1;
     }
 
-    else if(r == 2){
+    else if(r == 2)
+    {
         posicaoAtualPilha += 8;
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
-        while(tmp < 1){
+        while(tmp < 1)
+        {
             contadoraValorAlocarPilha++;
             tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
         }
 
-        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha)
+        {
             printf("subq $%d, %%rsp\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha;
             printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+
+            //------------------------------------------------PASSAGEM DE PARÂMETROS-----------------------------------------------------------------------------------------
+            if(strncmp(param1,"vi",2) == 0)
+            {
+                sscanf(param1, "vi%d", &p1);
+                printf("movl -%d(%%rbp), %%edi        #passa variável local como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"va",2) == 0)
+            {
+                sscanf(param1, "va%d", &p1);
+                printf("leaq -%d(%%rbp), %%rdi        #passa endereço inicial de variável local array como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1-1]);
+            }
+            else if(strncmp(param1,"pi",2) == 0)
+            {
+                sscanf(param1, "pi%d", &p1);
+                if(p1 == 1){
+                    printf("movl %%edi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movl %%esi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movl %%edx, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+
+            }
+            else if(strncmp(param1,"pa",2) == 0)
+            {
+                sscanf(param1, "pa%d", &p1);
+
+                if(p1 == 1){
+                    printf("movq %%rdi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movq %%rsi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movq %%rdx, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+
+            }
+            else if(strncmp(param1,"ci",2) == 0)
+            {
+                sscanf(param1, "ci%d", &p1);
+                printf("movl $%d, %%edi        #passa constante como primeiro parâmetro\n\n", p1);
+
+            }
+            //---------------------------------------------------------------------------------------------------------------------------------------------------------------
             printf("call f%d        #chama a função f%d\n\n", fn, fn);
             printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
             printf("addq $%d, %%rsp        #desaloca valor alocado para registradores após recuperá-los\n\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
         }
-        else{
+        else
+        {
             posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha;
             printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
+
+            //------------------------------------------------PASSAGEM DE PARÂMETROS-----------------------------------------------------------------------------------------
+            //PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1
+            if(strncmp(param1,"vi",2) == 0)
+            {
+                sscanf(param1, "vi%d", &p1);
+                printf("movl -%d(%%rbp), %%edi        #passa variável local como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"va",2) == 0)
+            {
+                sscanf(param1, "va%d", &p1);
+                printf("leaq -%d(%%rbp), %%rdi        #passa endereço inicial de variável local array como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"pi",2) == 0)
+            {
+                sscanf(param1, "pi%d", &p1);
+                if(p1 == 1){
+                    printf("movl %%edi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movl %%esi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movl %%edx, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+            }
+            else if(strncmp(param1,"pa",2) == 0)
+            {
+                sscanf(param1, "pa%d", &p1);
+
+                if(p1 == 1){
+                    printf("movq %%rdi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movq %%rsi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movq %%rdx, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+            }
+            else if(strncmp(param1,"ci",2) == 0)
+            {
+                sscanf(param1, "ci%d", &p1);
+                printf("movl $%d, %%edi        #passa constante como primeiro parâmetro\n\n", p1);
+
+            }
+            //PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1
+            //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
             printf("call f%d        #chama a função f%d\n\n", fn, fn);
             printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
         }
@@ -1031,7 +1161,8 @@ int verificaChamadaFunc(char *line, int count){
         return 1;
     }
 
-    else if(r == 3){
+    else if(r == 3)
+    {
 
         posicaoAtualPilha += 16;
 
@@ -1039,27 +1170,224 @@ int verificaChamadaFunc(char *line, int count){
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
-        while(tmp < 1){
+        while(tmp < 1)
+        {
             contadoraValorAlocarPilha++;
             tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
         }
 
-        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha)
+        {
             printf("subq $%d, %%rsp\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 8;
             posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha;
             printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
             printf("movq %%rsi, -%d(%%rbp)        #salva %%rsi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+
+            //------------------------------------------------PASSAGEM DE PARÂMETROS-----------------------------------------------------------------------------------------
+            //PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1
+            if(strncmp(param1,"vi",2) == 0)
+            {
+                sscanf(param1, "vi%d", &p1);
+                printf("movl -%d(%%rbp), %%edi        #passa variável local como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"va",2) == 0)
+            {
+                sscanf(param1, "va%d", &p1);
+                printf("leaq -%d(%%rbp), %%rdi        #passa endereço inicial de variável local array como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"pi",2) == 0)
+            {
+                sscanf(param1, "pi%d", &p1);
+                if(p1 == 1){
+                    printf("movl %%edi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movl %%esi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movl %%edx, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+            }
+            else if(strncmp(param1,"pa",2) == 0)
+            {
+                sscanf(param1, "pa%d", &p1);
+
+                if(p1 == 1){
+                    printf("movq %%rdi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movq %%rsi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movq %%rdx, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+            }
+            else if(strncmp(param1,"ci",2) == 0)
+            {
+                sscanf(param1, "ci%d", &p1);
+                printf("movl $%d, %%edi        #passa constante como primeiro parâmetro\n\n", p1);
+
+            }
+            //PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1
+
+            //PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2
+
+            if(strncmp(param2,"vi",2) == 0)
+            {
+                sscanf(param2, "vi%d", &p2);
+                printf("movl -%d(%%rbp), %%esi        #passa variável local como segundo parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p2 - 1]);
+            }
+            else if(strncmp(param2,"va",2) == 0)
+            {
+                sscanf(param2, "va%d", &p2);
+                printf("leaq -%d(%%rbp), %%rsi        #passa endereço inicial de variável local array como segundo parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p2 - 1]);
+            }
+            else if(strncmp(param2,"pi",2) == 0)
+            {
+                sscanf(param2, "pi%d", &p2);
+                if(p2 == 1){
+                    printf("movl %%edi, %%esi        #passa parâmetro %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 2){
+                    printf("movl %%esi, %%esi        #passa parâmetro %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 3){
+                    printf("movl %%edx, %%esi        #passa parâmetro %d atual como segundo parâmetro\n\n", p2);
+                }
+            }
+            else if(strncmp(param2,"pa",2) == 0)
+            {
+                sscanf(param2, "pa%d", &p2);
+
+                if(p2 == 1){
+                    printf("movq %%rdi, %%rsi        #passa parâmetro array %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 2){
+                    printf("movq %%rsi, %%rsi        #passa parâmetro array %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 3){
+                    printf("movq %%rdx, %%rsi        #passa parâmetro array %d atual como segundo parâmetro\n\n", p2);
+                }
+            }
+            else if(strncmp(param2,"ci",2) == 0)
+            {
+                sscanf(param2, "ci%d", &p2);
+                printf("movl $%d, %%esi        #passa constante como segundo parâmetro\n\n", p2);
+
+            }
+
+            //PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2
+            //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
             printf("call f%d        #chama a função f%d\n\n", fn, fn);
             printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
             printf("movq -%d(%%rbp), %%rsi        #recupera %%rsi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
             printf("addq $%d, %%rsp        #desaloca valor alocado para registradores após recuperá-los\n\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
         }
-        else{
+        else
+        {
             posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 8;
             posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha;
             printf("movq %%rdi, -%d(%%rbp)        #salva %%rdi em -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
             printf("movq %%rsi, -%d(%%rbp)        #salva %%rsi em -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
+
+            //------------------------------------------------PASSAGEM DE PARÂMETROS-----------------------------------------------------------------------------------------
+            //PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1
+            if(strncmp(param1,"vi",2) == 0)
+            {
+                sscanf(param1, "vi%d", &p1);
+                printf("movl -%d(%%rbp), %%edi        #passa variável local como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"va",2) == 0)
+            {
+                sscanf(param1, "va%d", &p1);
+                printf("leaq -%d(%%rbp), %%rdi        #passa endereço inicial de variável local array como primeiro parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p1 - 1]);
+            }
+            else if(strncmp(param1,"pi",2) == 0)
+            {
+                sscanf(param1, "pi%d", &p1);
+                if(p1 == 1){
+                    printf("movl %%edi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movl %%esi, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movl %%edx, %%edi        #passa parâmetro %d atual como primeiro parâmetro\n\n", p1);
+                }
+            }
+            else if(strncmp(param1,"pa",2) == 0)
+            {
+                sscanf(param1, "pa%d", &p1);
+
+                if(p1 == 1){
+                    printf("movq %%rdi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 2){
+                    printf("movq %%rsi, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+                else if(p1 == 3){
+                    printf("movq %%rdx, %%rdi        #passa parâmetro array %d atual como primeiro parâmetro\n\n", p1);
+                }
+            }
+            else if(strncmp(param1,"ci",2) == 0)
+            {
+                sscanf(param1, "ci%d", &p1);
+                printf("movl $%d, %%edi        #passa constante como primeiro parâmetro\n\n", p1);
+
+            }
+            //PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1 PARAM 1
+
+            //PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2
+
+            if(strncmp(param2,"vi",2) == 0)
+            {
+                sscanf(param2, "vi%d", &p2);
+                printf("movl -%d(%%rbp), %%esi        #passa variável local como segundo parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p2 - 1]);
+            }
+            else if(strncmp(param2,"va",2) == 0)
+            {
+                sscanf(param2, "va%d", &p2);
+                printf("leaq -%d(%%rbp), %%rsi        #passa endereço inicial de variável local array como segundo parâmetro\n\n", posicaoPilhaVariaveisLocaisRegistradores[p2 - 1]);
+            }
+            else if(strncmp(param2,"pi",2) == 0)
+            {
+                sscanf(param2, "pi%d", &p2);
+                if(p2 == 1){
+                    printf("movl %%edi, %%esi        #passa parâmetro %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 2){
+                    printf("movl %%esi, %%esi        #passa parâmetro %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 3){
+                    printf("movl %%edx, %%esi        #passa parâmetro %d atual como segundo parâmetro\n\n", p2);
+                }
+            }
+            else if(strncmp(param2,"pa",2) == 0)
+            {
+                sscanf(param2, "pa%d", &p2);
+
+                if(p2 == 1){
+                    printf("movq %%rdi, %%rsi        #passa parâmetro array %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 2){
+                    printf("movq %%rsi, %%rsi        #passa parâmetro array %d atual como segundo parâmetro\n\n", p2);
+                }
+                else if(p2 == 3){
+                    printf("movq %%rdx, %%rsi        #passa parâmetro array %d atual como segundo parâmetro\n\n", p2);
+                }
+            }
+            else if(strncmp(param2,"ci",2) == 0)
+            {
+                sscanf(param2, "ci%d", &p2);
+                printf("movl $%d, %%esi        #passa constante como segundo parâmetro\n\n", p2);
+
+            }
+
+            //PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2 PARAM 2
+            //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
             printf("call f%d        #chama a função f%d\n\n", fn, fn);
             printf("movq -%d(%%rbp), %%rdi        #recupera %%rdi de -%d(%%rbp)\n", posicaoPilhaVariaveisLocaisRegistradores[5], posicaoPilhaVariaveisLocaisRegistradores[5]);
             printf("movq -%d(%%rbp), %%rsi        #recupera %%rsi de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[6], posicaoPilhaVariaveisLocaisRegistradores[6]);
@@ -1068,19 +1396,22 @@ int verificaChamadaFunc(char *line, int count){
         return 1;
     }
 
-    else if(r == 4){
+    else if(r == 4)
+    {
 
         posicaoAtualPilha += 24;
         printf("Linha %d: %s\n\n", count + 1, line + 256 * count);
 
         tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
 
-        while(tmp < 1){
+        while(tmp < 1)
+        {
             contadoraValorAlocarPilha++;
             tmp = (contadoraValorAlocarPilha * 16)/posicaoAtualPilha;
         }
 
-        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha){
+        if(contadoraValorAlocarPilha * 16 > valorAlocadoPilha)
+        {
             printf("subq $%d, %%rsp\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
             posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 16;
             posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha - 8;
@@ -1094,7 +1425,8 @@ int verificaChamadaFunc(char *line, int count){
             printf("movq -%d(%%rbp), %%rdx        #recupera %%rdx de -%d(%%rbp)\n\n", posicaoPilhaVariaveisLocaisRegistradores[7], posicaoPilhaVariaveisLocaisRegistradores[7]);
             printf("addq $%d, %%rsp        #desaloca valor alocado para registradores após recuperá-los\n\n", contadoraValorAlocarPilha * 16 - valorAlocadoPilha);
         }
-        else{
+        else
+        {
             posicaoPilhaVariaveisLocaisRegistradores[5] = posicaoAtualPilha - 16;
             posicaoPilhaVariaveisLocaisRegistradores[6] = posicaoAtualPilha - 8;
             posicaoPilhaVariaveisLocaisRegistradores[7] = posicaoAtualPilha;
@@ -1137,12 +1469,13 @@ int main()
     {
 
         /*________________________________________VERIFICA SE É DECLARAÇÃO DE FUNÇÃO________________________________________*/
-        if(verificaDeclaracaoFunc(line ,count) == 1)
+        if(verificaDeclaracaoFunc(line,count) == 1)
         {
             posicaoAtualPilha = 0;
             valorAlocadoPilha = 0;
 
-            for(int i = 0; i<5; i++){
+            for(int i = 0; i<5; i++)
+            {
                 posicaoPilhaVariaveisLocaisRegistradores[i] = 0;
             }
 
@@ -1161,7 +1494,7 @@ int main()
         }
         /*___________________________________________________________________________________________________________________________________________*/
 
-                /*________________________________________VERIFICA SE É CONDICIONAL________________________________________*/
+        /*________________________________________VERIFICA SE É CONDICIONAL________________________________________*/
         if(verificaCondicional(line, count) == 1)
         {
             count++;
